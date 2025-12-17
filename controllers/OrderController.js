@@ -77,40 +77,40 @@ const trackOrder = async (req, res) => {
     try {
         const { orderId } = req.params;
         
-        // For demo purposes, return mock data for WV order IDs
-        if (orderId.startsWith('WV')) {
+        // Try to find order by orderId field first
+        let order = await Order.findOne({ orderId: orderId });
+        
+        // If not found and it's a demo order, return mock data
+        if (!order && (orderId.startsWith('WV') || orderId.startsWith('ORD'))) {
             return res.json({
                 id: orderId,
                 status: 'out-for-delivery',
-                estimatedDelivery: new Date(Date.now() + 2 * 60 * 60 * 1000), // 2 hours from now
+                estimatedDelivery: '2:30 PM',
                 items: [
                     { name: 'Organic Red Apples', quantity: 2, price: 125 },
                     { name: 'Farm Fresh Milk', quantity: 1, price: 48 }
                 ],
                 total: 298,
-                address: {
-                    street: 'No. 45, Avinashi Road',
-                    city: 'Peelamedu, Coimbatore - 641004'
-                }
+                address: 'No. 45, Avinashi Road, Peelamedu, Coimbatore - 641004',
+                deliveryPerson: 'Raj Kumar',
+                phone: '+91 9876543210'
             });
         }
-        
-        // Try to find real order by MongoDB _id
-        const order = await Order.findById(orderId)
-            .populate('items.product', 'name image')
-            .select('status items totalAmount deliveryAddress estimatedDelivery createdAt');
         
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
         }
         
         res.json({
-            id: order._id,
+            id: order.orderId,
             status: order.status,
-            estimatedDelivery: order.estimatedDelivery,
+            estimatedDelivery: order.trackingInfo?.estimatedDelivery || order.estimatedDelivery,
             items: order.items,
-            total: order.totalAmount,
-            address: order.deliveryAddress
+            total: order.totals?.total || order.totalAmount,
+            address: `${order.customerInfo?.address}, ${order.customerInfo?.city}`,
+            deliveryPerson: 'Raj Kumar',
+            phone: '+91 9876543210',
+            trackingInfo: order.trackingInfo
         });
     } catch (error) {
         res.status(500).json({ message: error.message });
