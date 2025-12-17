@@ -3,13 +3,32 @@ const Order = require('../models/OrderModel');
 // Create new order
 const createOrder = async (req, res) => {
     try {
-        const order = new Order({
+        const orderData = {
             ...req.body,
             estimatedDelivery: new Date(Date.now() + 30 * 60 * 1000) // 30 minutes from now
-        });
+        };
+        
+        // Remove user field if not provided
+        if (!orderData.user) {
+            delete orderData.user;
+        }
+        
+        // Clean items to remove product references if not provided
+        if (orderData.items) {
+            orderData.items = orderData.items.map(item => {
+                const cleanItem = { ...item };
+                if (!cleanItem.product) {
+                    delete cleanItem.product;
+                }
+                return cleanItem;
+            });
+        }
+        
+        const order = new Order(orderData);
         const savedOrder = await order.save();
         res.status(201).json(savedOrder);
     } catch (error) {
+        console.error('Order creation error:', error);
         res.status(400).json({ message: error.message });
     }
 };
