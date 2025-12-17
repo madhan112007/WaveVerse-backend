@@ -102,7 +102,8 @@ app.get('/api/health', (req, res) => {
             orders: '/api/orders',
             returns: '/api/returns',
             support: '/api/support',
-            admin: '/api/admin'
+            admin: '/api/admin',
+            recipes: '/api/recipes'
         }
     });
 });
