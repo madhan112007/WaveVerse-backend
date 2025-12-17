@@ -23,23 +23,23 @@ app.get('/api/setup-admin', async (req, res) => {
         const User = require('./models/SignUpModel');
         
         // Check if admin already exists
-        const existingAdmin = await User.findOne({ email: 'admin@waveverse.com' });
+        const existingAdmin = await User.findOne({ email: 'codethetrend@gmail.com' });
         if (existingAdmin) {
-            return res.json({ message: 'Admin user already exists', email: 'admin@waveverse.com' });
+            return res.json({ message: 'Admin user already exists', email: 'codethetrend@gmail.com' });
         }
         
         // Create admin user
         const adminUser = new User({
-            firstName: 'Admin',
-            lastName: 'User',
-            email: 'admin@waveverse.com',
+            firstName: 'Code',
+            lastName: 'Trend',
+            email: 'codethetrend@gmail.com',
             phone: 9363752456,
-            password: 'admin123',
+            password: 'Sarasmad@123',
             role: 'admin'
         });
         
         await adminUser.save();
-        res.json({ message: 'Admin user created successfully', email: 'admin@waveverse.com', password: 'admin123' });
+        res.json({ message: 'Admin user created successfully', email: 'codethetrend@gmail.com', password: 'Sarasmad@123' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -53,6 +53,7 @@ const authRouter = require('./routers/AuthRouter');
 const returnRouter = require('./routers/ReturnRouter');
 const supportRouter = require('./routers/SupportRouter');
 const adminRouter = require('./routers/AdminRouter');
+const recipeRouter = require('./routers/RecipeRouter');
 
 app.use('/api/user', userRouter);
 app.use('/api', contactRouter);
@@ -62,6 +63,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/returns', returnRouter);
 app.use('/api/support', supportRouter);
 app.use('/api/admin', adminRouter);
+app.use('/api/recipes', recipeRouter);
 
 // Debug endpoint to list all users
 app.get('/api/debug/users', async (req, res) => {
