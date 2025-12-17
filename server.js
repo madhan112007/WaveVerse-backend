@@ -54,6 +54,7 @@ app.use('/api/returns', returnRouter);
 app.use('/api/support', supportRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/recipes', recipeRouter);
+console.log('All routes registered including /api/recipes');
 
 // Debug endpoint to list all users
 app.get('/api/debug/users', async (req, res) => {
