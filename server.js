@@ -2,11 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-// CORS configuration - allow all origins for development
-app.use(cors({
-  origin: true,
-  credentials: true
-}));
+// CORS configuration - allow all origins
+app.use(cors());
+app.options('*', cors());
 app.use(express.json());
 
 // Create admin user endpoint (for setup) - must be before other routes
