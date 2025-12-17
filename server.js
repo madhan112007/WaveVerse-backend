@@ -2,15 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-// CORS configuration for production
+// CORS configuration
 const corsOptions = {
-  origin: process.env.NODE_ENV === 'production' 
-    ? [
-        'https://wearverse.netlify.app', 
-        'https://main--wearverse.netlify.app',
-        /\.netlify\.app$/  // Allow any netlify subdomain
-      ]
-    : ['http://localhost:3000'],
+  origin: [
+    'http://localhost:3000',
+    'https://wearverse.netlify.app', 
+    'https://main--wearverse.netlify.app',
+    /\.netlify\.app$/
+  ],
   credentials: true
 };
 
